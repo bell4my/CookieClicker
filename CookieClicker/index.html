@@ -1,0 +1,449 @@
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link href="responsive.css" rel="stylesheet" type="text/css" />
+    <title>Cookie clicker</title>
+</head>
+<body class="center">
+    <p class="text">#SOUND ON!</p>
+    <div id="initialScreen">       
+        <h1>Kamas Clicker</h1>
+        <div class="bubble">
+            <p>Tu veux jouer ?<br>Clique sur mes fesses</p>
+        </div>
+        <button id="playButton" onclick="showGameScreen()"> <img src="assets/img/cochon-face.png" alt=""></button>
+        <p>(a vos riques et profits)</p>
+    </div>
+
+   
+    <div id="gameScreen">
+
+        <div class="dofus-frame">
+            <h2>Règles du jeu</h2>
+            <ol>
+              <li>Clikas pour obtenir des kamas -> Clique + kamas (lol)</li>
+              <li>Tu peux acheter des améliorations pour ton clikas (départ : 20 kamas)<img src="assets/img/piece.png" alt=""></li>
+              <li>Recrute autant de nunu que tu veux pour t'aider<img src="assets/img/ENUTROF.png" alt=""></li>
+              <li>Achète un bonus qui améliore ton clikas pendant 30 secondes<img src="assets/img/bourse.png" alt=""></li>
+              <li>ATTENTION : tous les 8 888 kamas obtenus, tu peux gagner encore plus ou tout perdre... (:</li>
+            </ol>
+          </div>
+          
+
+
+        <div class="center-container">
+            <button id="clickButton"><img src="assets/img/kamas_piece.png" draggable='false' alt=""></button>
+            <div id="display">0</div>
+        </div>   
+
+
+        <div class="button-container">
+
+            <div class="piece-container">
+                <img src="assets/img/piece.png" alt="">
+                <button id="multiply">Kamas par clic = 1<div id="displayMultiplier"></div></button>
+            </div>
+            
+            <div class="enutrof-container">
+                <img src="assets/img/ENUTROF.png" alt="Image énutrof">
+                <button id="autoclic">Recruter un énutrof (<span id="enutrofPrice">500</span> kamas)</button>
+            </div>
+            
+            <div class="bourse-container">
+                <img src="assets/img/bourse.png" alt="">
+                <button id="bonus">BONUS (<span id="bonusTime">30</span> sec)</button>
+            </div>
+        </div>
+
+        <div class="image-container"></div>
+    </div>
+    
+
+    <div id="popup">
+        <div id="question"></div>
+        <form>
+            <label><input type="radio" name="answer" value="true"> Vrai</label>
+            <label><input type="radio" name="answer" value="false"> Faux</label>
+        </form>
+        <button id="submit">Soumettre</button>
+        <div id="popupResult">
+            <p id="popupMessage"></p>
+        </div>
+    </div>
+
+
+    <script>
+
+        // INITILISATION DU JEU
+        let initialScreen = document.getElementById('initialScreen');
+        let gameScreen = document.getElementById('gameScreen');
+        gameScreen.style.display = 'none';
+        let playButton = document.getElementById('playButton');
+        playButton.addEventListener('click', function() {
+            document.getElementById('initialScreen').style.display = 'none';
+            gameScreen.style.display = 'flex';
+            let buttonClickSound = new Audio('assets/sounds/Pig sound effect.mp3');
+            buttonClickSound.play();
+            audio.play();
+        });
+        let audio = new Audio('assets/sounds/Dofus Retro OST (Remastered)_1.mp3'); 
+        audio.loop = true; //musique en boucle pour devenir zinZIIIINN
+
+        playButton.addEventListener('click', function() {
+            initialScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+            audio.play();
+        });
+
+        // LE JEU SE LANCE
+
+
+
+        /* on stock dans des variables pour les réutiliser par la suite */
+        let button = document.getElementById('clickButton');
+        let multiplyButton = document.getElementById('multiply');
+        let autoclicButton = document.getElementById('autoclic');
+        let display = document.getElementById('display');
+        display.style.fontFamily = 'Poppins'
+        display.style.color = '#191E23'
+
+        let displayMultiplier = document.getElementById('displayMultiplier');
+        let bonusButton = document.getElementById('bonus');             
+        let enutrofPriceElement = document.getElementById('enutrofPrice');
+        let bonusTimeElement = document.getElementById('bonusTime');
+        let bonusInterval = null;
+      
+        let popup = document.getElementById('popup');
+              
+        let counter = 0;  /* variable pour stocker le compte initié a 0 */       
+        let multiplier = 1; /* variable pour initier le multiply en commençant par +1 */
+        let multiplierPrice = 10; /* variable pour initier le coût du prix de base du multiply */
+        //let autoClickCost = 500; // le prix que coûte l'auto click
+        let enutrofPrice = 500;
+        let autoClickInterval = null // on stock dans une variable l'intervalle de référence
+        let autoClickerPurchased = false // variable pour tracké si l'autoclicker a été acheté
+        
+
+        let bonusActive = false;
+        let bonusTime = 30;
+        let bonusClickIncrement = 3;
+        let bonusCost = 5000;
+
+        enutrofPriceElement.textContent = enutrofPrice;
+        bonusButton.innerHTML = "BONUS (" + bonusTime + " sec)<br>("+ bonusCost + " kamas)";
+
+
+            
+        
+        /* on ajoute un évènement au bouton lorsqu'on clique ainsi qu'une fonction */
+        button.addEventListener('click', function(event) {
+            counter += multiplier;
+
+            if (bonusActive) {
+                counter += bonusClickIncrement;
+            }
+
+            display.textContent = counter + " kamas";
+
+            if (counter % 8888 === 0) {
+                displayPopup();
+            }
+
+            let audio = new Audio('assets/sounds/Gold (Sound Effect)  Diablo II.mp3');
+            audio.play();
+
+            let x = event.clientX;
+            let y = event.clientY;
+            let msg_click = document.createElement('msg_click');
+            msg_click.classList.add("msg_click");
+            msg_click.style.left = x + 'px';
+            msg_click.style.top = y + 'px';
+            msg_click.style.position = 'fixed';
+            msg_click.style.pointerEvents = 'none';
+            msg_click.innerHTML = "+" + multiplier + "<img src='assets/img/K.png' style='width: 20px; apsect-ratio: 1;'></img>";
+
+            document.body.appendChild(msg_click);
+            
+            // supprime le message après qqls tps
+             setTimeout(function() 
+             {
+                 msg_click.remove();
+             }, 500);
+
+        });
+
+        /* fonction pour augmenter le multiplicateur */
+        function augmenterMultiplicateur() {
+            // on ajoute une condition où l'on doit dépenser des cookies pour augmenter le multiply
+            if (counter >= multiplierPrice) {
+                multiplier++;
+                counter -= multiplierPrice;
+                display.textContent = counter + " kamas";
+                displayMultiplier.textContent = multiplier;
+                updateMultiplierPrice(); // MaJ le coût du prochain multiply
+            }   
+                   
+        }
+
+        function updateMultiplierPrice() {
+            multiplierPrice *= 2; // Double le prix de la prochaine amélioration du multiply
+            multiplyButton.innerHTML = "Kamas par clic = " + multiplier + " <br>(" + multiplierPrice + " kamas pour upgrade)"; // MaJ du bouton texte
+            
+        }
+
+        // fonction pour débloquer l'auto clique
+        function enableAutoClick() {
+            if (counter >= autoClickCost && !autoClickInterval && !autoClickerPurchased) // si le total de kamas et supérieur ou égal au côut de l'achat de l'autoclick défini dans la variable
+            {
+                counter -= autoClickCost;
+                display.textContent = counter;
+                autoClickInterval = setInterval(clickAutomatically, 1000);
+            }
+               
+        }
+
+        // fonction pour l'auto clique
+        function clickAutomatically() {
+            counter += multiplier;
+            display.textContent = counter + " kamas";
+
+            if (counter % 8888 === 0) {
+                displayPopup();
+            }
+
+
+            if (counter >= 500 && autoclicButton.disabled)
+            {
+                autoclicButton.disabled = false;
+            }
+
+            // Faire sauter l'image recrutée
+            const recruitedImages = document.querySelectorAll('.recruited-image');
+            recruitedImages.forEach(function(image) {
+                image.classList.add('jump-animation');
+                
+                // Supprime la classe d'animation après un court délai
+                setTimeout(function() {
+                    image.classList.remove('jump-animation');
+                }, 500);
+            });
+
+            
+        }
+
+        // Sélectionner la div d'image et le bouton "Recruter un énutrof"
+        const imageContainer = document.querySelector('.image-container');
+        const recruterButton = document.getElementById('autoclic');
+
+        function buyAutoclicker() {
+            if (counter >= enutrofPrice)
+            {
+                counter -= enutrofPrice;
+                display.textContent = counter;
+                autoClickerPurchased = true;
+                autoclicButton.disabled = true;
+                autoClickInterval = setInterval(clickAutomatically, 1000);
+                enutrofPrice *= 2;
+                autoclicButton.innerHTML = "Recruter un énutrof <br>(" + enutrofPrice + " kamas)";
+
+                // Créer un nouvel élément img pour l'image d'énutrof
+                const enutrofImage = document.createElement('img');
+                enutrofImage.src = 'assets/img/nunu.png';
+                enutrofImage.alt = 'Image énutrof';
+                enutrofImage.classList.add('recruited-image');
+
+                // Ajouter l'image d'énutrof à la div d'image
+                imageContainer.appendChild(enutrofImage);
+            }
+              
+        }
+
+        function activateBonus() {
+            if (counter >= bonusCost && !bonusActive) {
+                counter -= bonusCost;
+                display.textContent = counter + " kamas";
+                bonusActive = true;
+                bonusButton.disabled = true;
+
+                let remainingTime = 30;
+                bonusButton.textContent = "BONUS (" + remainingTime + " sec) x" + bonusClickIncrement + " - " + bonusCost + " kamas";
+
+                let initialMultiplier = multiplier; // sauvegarde le multiplicateur initial
+                multiplier *= bonusClickIncrement; // applique le multiplicateur de bonus
+
+                bonusInterval = setInterval(function() {
+                    remainingTime--;
+                    bonusButton.textContent = "BONUS (" + remainingTime + " sec) x" + bonusClickIncrement + " - " + bonusCost + " kamas";
+                    
+
+                    if (remainingTime === 0) {
+                        clearInterval(bonusInterval);
+                        bonusActive = false;
+                        bonusButton.disabled = false;
+                        bonusButton.textContent = "BONUS (" + bonusCost + " kamas)";
+                        multiplier = initialMultiplier; // rétablit le multiplicateur initial
+                    }
+                }, 1000);
+
+                setTimeout(function() {
+                    clearInterval(bonusInterval);
+                    bonusActive = false;
+                    bonusButton.disabled = false;
+                    bonusButton.textContent = "BONUS (" + bonusCost + " kamas)";
+                    multiplier = initialMultiplier; // rétablit le multiplicateur initial
+                    displayPopup(); // Déclenche le popup de question
+                }, 30000);
+
+                // double le multiplicateur/coût après chaque achat
+                bonusClickIncrement *= 2; 
+                bonusCost *= 2; 
+            }
+               
+        }
+
+
+
+        
+       /* l'action lorsqu'on clique sur un bouton */ 
+
+        multiplyButton.addEventListener('click', augmenterMultiplicateur);
+        autoclicButton.addEventListener('click', buyAutoclicker);
+        bonusButton.addEventListener('click', activateBonus);
+        
+        // TRANSITION DES SCREENS //
+        function showGameScreen() {
+            let initialScreen = document.getElementById("initialScreen");
+            let gameScreen = document.getElementById("gameScreen");
+
+            initialScreen.style.opacity = "0"; // Réduit l'opacité de l'écran initial progressivement
+            gameScreen.style.display = "flex";
+            setTimeout(function () {
+                initialScreen.style.display = "none";
+                gameScreen.style.opacity = "1"; // Augmente l'opacité de l'écran du jeu progressivement
+            }, 500);
+        }
+        //////////////////////////////////
+
+        // POP UP QUESTIONS
+
+        function displayPopup() {
+    // Masquer la gameScreen
+    gameScreen.style.display = 'none';
+
+    // Liste des questions avec leurs réponses
+    const questions = [
+        {
+            question: "Une dragodinde émeraude-rousse donne +300 vie et +1 PM ?",
+            answer: true
+        },
+        {
+            question: "Un minotoror lance un tofu à une vitesse de 10 cases par minute, le tofu aura donc parcouru un total de 100 cases après 5 minutes.",
+            answer: false
+        },
+        {
+            question: "Les ailes blanches des bontariens sont blanches.",
+            answer: true
+        },
+        {
+            question: "La carotte est le repas préféré des Wabbits.",
+            answer: true
+        },
+        {
+            question: "Il y a un total de 12 îles dans le monde des 12.",
+            answer: false 
+        }
+    ];
+
+    // Sélectionner une question aléatoire
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    const randomQuestion = questions[randomIndex];
+
+    // Afficher la pop-up avec la question
+    popup.style.display = 'block';
+    popup.innerHTML = `
+        <h1>Question :</h1>
+        <p>${randomQuestion.question}</p>
+        <button id="trueButton">Vrai</button>
+        <button id="falseButton">Faux</button>
+    `;
+
+    // Vérifier la réponse lorsque l'utilisateur clique sur un bouton
+    const trueButton = document.getElementById('trueButton');
+    const falseButton = document.getElementById('falseButton');
+
+    trueButton.addEventListener('click', function() {
+        checkAnswer(true, randomQuestion.answer);
+    });
+
+    falseButton.addEventListener('click', function() {
+        checkAnswer(false, randomQuestion.answer);
+    });
+
+
+    // Créer l'élément img
+    let image = document.createElement('img');
+    image.src = 'assets/img/compte_credit.png';
+    image.style.width = '400px';
+    image.style.height = 'auto';
+     
+
+    // Créer l'élément span
+    let text = document.createElement('span');
+    text.textContent = ' 10.000 kamas !';
+    text.style.color = '#5b903f'
+
+
+    // Fonction pour vérifier la réponse donnée par l'utilisateur
+    function checkAnswer(userAnswer, correctAnswer) {
+        if (userAnswer === correctAnswer) {
+            // Réponse correcte
+            popup.innerHTML = "<h1>Bonne réponse !</h1>";
+
+
+            // Créditer le compte du joueur de 10 000 kamas
+            counter += 10000;
+            display.textContent = counter + " kamas";
+
+            // Ajouter le message supplémentaire
+            let additionalMessage = document.createElement('p');
+            additionalMessage.appendChild(image);
+            additionalMessage.appendChild(text);
+            popup.appendChild(additionalMessage);
+
+            // Jouer le son
+            let audio = new Audio('assets/sounds/win.mp3');
+            audio.play();
+
+        } else {
+            // Réponse incorrecte
+            popup.innerHTML = "<h1>Mauvaise réponse.</h1><p>La réponse correcte était : " + (correctAnswer ? "Vrai" : "Faux") + "</p>";
+
+            // Réinitialiser le compte du joueur à 0
+            counter = 0;
+            display.textContent = counter + " kamas";
+
+            // Ajouter le message supplémentaire
+            let additionalMessage = document.createElement('p');
+            additionalMessage.textContent = "Pas d'oeuf ! Votre compte s'est fait hacké, plus de kamas :)";
+            popup.appendChild(additionalMessage);
+
+            // Jouer le son
+            let audio = new Audio('assets/sounds/lose.mp3');
+            audio.play();
+        }
+
+        // Cacher la pop-up après 5 secondes
+        setTimeout(function() {
+            popup.style.display = 'none';
+            gameScreen.style.display = 'flex';
+        }, 5000);
+    }
+}
+
+    </script>
+    </body> 
+</html>
+

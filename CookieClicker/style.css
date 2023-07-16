@@ -1,0 +1,355 @@
+*{
+	padding:0;/*marge interne*/
+	margin:0;/*marge externe*/
+	box-sizing:border-box;/*le padding et les bordures sont inclus dans la largeur des balises*/
+	outline:none;
+}
+
+@font-face {
+    font-family: "Poppins";
+    font-weight: 400;
+    src: url("assets/font/Poppins/poppins-regular-webfont.woff2");
+  }
+
+@font-face {
+    font-family: "Poppins";
+    font-weight: 100;
+    src: url("assets/font/Poppins/poppins-thin-webfont.woff2");  
+}
+
+@font-face {
+    font-family: "Poppins";
+    font-weight: 700;
+    src: url("assets/font/Poppins/poppins-bold-webfont.woff2");
+  }
+
+
+
+
+.center {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+    background-image: url(assets/img/paysage.jpg);
+  }
+
+
+#clickButton {
+    padding: 15px 25px;
+    font-size: 24px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background:none;
+    border: none;
+    
+}
+
+
+#clickButton:active {   
+    transform: translateY(10px); 
+}
+
+@keyframes transform {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    20% {
+        transform: translateY(-100px);
+    }
+    to{
+        transform: translateY(-400px);
+        opacity: 0;
+    }
+}
+.msg_click{
+    animation: transform 4s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+   
+}
+
+
+
+/***************************************************************************/
+
+#initialScreen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+   
+    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond semi-transparente */
+    padding: 20px;
+    border-radius: 10px;
+
+    transition: opacity 0.5s ease;
+}
+
+#initialScreen h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-family: 'Poppins';
+    font-weight: 700;
+    color: #F5A623;
+}
+
+#initialScreen button {   
+    cursor: pointer;
+    outline: none; 
+    background:none;
+    border: none;
+}
+
+#initialScreen button img {
+    width: 62px;
+    height: 118px;
+}
+
+#initialScreen button:hover img{
+    content: url(assets/img/cochon-dos.png);
+}
+
+
+#gameScreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+    position: relative;
+}
+
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 200px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 100px;
+}
+
+.piece-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.piece-container img {
+    width: 100px; 
+    margin-bottom: 10px;
+}
+
+.enutrof-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.enutrof-container img {
+    width: 100px; 
+    margin-bottom: 10px;
+}
+
+.bourse-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.bourse-container img {
+    width: 100px; 
+    margin-bottom: 10px;
+}
+  
+
+
+
+.button-container button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #F5A623;
+    color: white;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+    
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .button-container button:hover {
+    background-color: #FFC84D;
+  }
+
+
+
+.text {
+    position: fixed;
+    top: 50px;
+    right: 300px;
+    color: black;
+    font-size: 20px;
+    text-transform: uppercase;
+}
+
+.show {
+    opacity: 1;
+}
+
+/*******************************************************/
+
+.bubble {
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    background-color: #F0F0F0;
+    border-radius: 10px;
+    border: 1px solid #888;
+  }
+  
+  .bubble::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 160px;
+    border-style: solid;
+    border-width: 10px;
+    border-color: #F0F0F0 transparent transparent transparent;
+  }
+  
+
+  /*******************POP UP************************************/
+
+  #popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: none;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    transition: opacity 0.5s ease;
+    font-family: 'Poppins';
+    line-height: 50px;
+}
+
+#trueButton, #falseButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #F5A623;
+    color: white;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+    
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  #trueButton:hover, #falseButton:hover {
+    background-color:#FFD700;
+  }
+
+
+/*******************************************************************/
+
+.image-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap; /* Les images passent à la ligne si nécessaire */
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Espacement entre les images et le bas de l'écran */
+    width: 80vw;
+  }
+  
+  .image-container img {
+    width: 35px; 
+    height: auto; 
+    margin: 10px; 
+    transition: transform 0.5s;
+  }
+
+  .jump-animation {
+    animation: jump 0.5s;
+}
+
+  @keyframes jump {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/*************************************************************************/
+  
+/*****REGLE DU JEU**************/
+
+.dofus-frame {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 3px solid #FFD700;
+    border-radius: 10px;
+    padding: 20px;
+    width: 350px;
+    height: auto;
+    font-family: 'Poppins',sans-serif;
+    font-weight: 400;
+  }
+  
+  .dofus-frame h2 {
+    color: #FFD700;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 40px;
+  }
+  
+  .dofus-frame ol {
+    color: #FFF;
+    font-size: 16px;
+    margin: 0;
+    padding-left: 20px;
+  }
+  
+  .dofus-frame li {
+    margin-bottom: 30px;
+    line-height: 25px;
+  }
+
+  .dofus-frame img {
+    width: 20px;
+    height: auto;
+    margin-left: 10px;
+  }
+  
+  
+  
+  

@@ -1,0 +1,73 @@
+/* Styles pour les écrans de taille inférieure à 600px */
+@media screen and (max-width: 600px) {
+    .center {
+      flex-direction: column;
+    }
+    
+    #initialScreen {
+      width: 90%;
+      padding: 10px;
+    }
+    
+    .button-container {
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .piece-container,
+    .enutrof-container,
+    .bourse-container {
+      margin-top: 20px;
+      align-self: center;
+    }
+    
+    .piece-container img,
+    .enutrof-container img,
+    .bourse-container img {
+      width: 60px;
+    }
+  }
+  
+  /* Styles pour les écrans de taille inférieure à 400px */
+  @media screen and (max-width: 400px) {
+    .dofus-frame {
+      width: 90%;
+      font-size: 18px;
+    }
+    
+    .dofus-frame h2 {
+      font-size: 20px;
+    }
+    
+    .dofus-frame li {
+      font-size: 14px;
+    }
+    
+    .image-container img {
+      width: 25px;
+      margin: 5px;
+    }
+  }
+  
+  /* Styles pour les écrans de taille inférieure à 320px */
+  @media screen and (max-width: 320px) {
+    .dofus-frame {
+      font-size: 16px;
+    }
+    
+    .dofus-frame h2 {
+      font-size: 18px;
+    }
+    
+    .dofus-frame li {
+      font-size: 12px;
+    }
+    
+    .image-container img {
+      width: 20px;
+      margin: 3px;
+    }
+  }
+  
